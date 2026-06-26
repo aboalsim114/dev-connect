@@ -5,6 +5,7 @@ import RealTime from "../../components/RealTime/RealTime"
 import Stack from "../../components/Stack/Stack"
 import CTABand from "../../components/CTABand/CTABand"
 import Footer from "../../components/Footer/Footer"
+import Pricing from "../../components/Pricing/Pricing"
 function Home() {
   return (
    <>
@@ -13,6 +14,7 @@ function Home() {
     <FeedPreview/>
     <RealTime/>
     <Stack/>
+    <Pricing/>
     <CTABand/>
     <Footer/>
    </>
