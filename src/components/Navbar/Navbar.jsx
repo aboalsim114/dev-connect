@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const links = [
   { label: 'Fonctionnalités', href: '#features' },
@@ -38,12 +39,12 @@ export default function Navbar() {
             <GitHubIcon />
             GitHub
           </a>
-          <a
-            href="#"
+          <Link
+            to="/rejoindre"
             className="rounded-[9px] bg-accent px-[18px] py-2.5 text-[14px] font-semibold text-ink no-underline transition hover:brightness-95"
           >
             Rejoindre
-          </a>
+          </Link>
         </div>
 
         {/* Burger – mobile */}
@@ -67,9 +68,9 @@ export default function Navbar() {
             {links.map(l => (
               <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="hover:text-ink no-underline">{l.label}</a>
             ))}
-            <a href="#" className="mt-2 rounded-[9px] bg-accent px-[18px] py-2.5 text-center font-semibold text-ink no-underline">
+            <Link to="/rejoindre" className="mt-2 rounded-[9px] bg-accent px-[18px] py-2.5 text-center font-semibold text-ink no-underline">
               Rejoindre
-            </a>
+            </Link>
           </nav>
         </div>
       )}

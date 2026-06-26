@@ -33,3 +33,29 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
+
+/* Input wrapper with focus-within accent ring */
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #DDE0D8;
+  border-radius: 11px;
+  padding: 0 13px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.input-wrapper:focus-within {
+  border-color: #BEF264;
+  box-shadow: 0 0 0 4px color-mix(in srgb, #BEF264 28%, transparent);
+}
+.input-wrapper input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 15px;
+  color: #0B0F17;
+  padding: 13px 8px;
+}
+.input-wrapper input::placeholder { color: #9AA1AD; }
