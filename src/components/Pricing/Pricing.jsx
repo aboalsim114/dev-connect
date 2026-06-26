@@ -1,264 +1,196 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-const plans = [
-  {
-    name: 'Gratuit',
-    monthlyPrice: 0,
-    yearlyPrice: 0,
-    description: 'Pour découvrir DevConnect et rejoindre la communauté.',
-    cta: 'Commencer gratuitement',
-    ctaStyle: 'outline',
-    features: [
-      { text: 'Profil développeur public',       included: true  },
-      { text: '5 snippets par mois',              included: true  },
-      { text: 'Feed & follow illimités',          included: true  },
-      { text: 'Messagerie (5 conversations)',      included: true  },
-      { text: 'Notifications temps réel',         included: true  },
-      { text: 'Connexion GitHub OAuth',           included: true  },
-      { text: 'Snippets privés',                  included: false },
-      { text: 'Statistiques avancées',            included: false },
-      { text: 'Badge Pro & profil mis en avant',  included: false },
-      { text: 'Support prioritaire',              included: false },
-    ],
-  },
-  {
-    name: 'Pro',
-    monthlyPrice: 9,
-    yearlyPrice: 7,
-    badge: 'Le plus populaire',
-    description: 'Pour les devs qui veulent maximiser leur visibilité.',
-    cta: 'Passer à Pro',
-    ctaStyle: 'accent',
-    features: [
-      { text: 'Profil développeur public',       included: true },
-      { text: 'Snippets illimités',               included: true },
-      { text: 'Feed & follow illimités',          included: true },
-      { text: 'Messagerie illimitée',             included: true },
-      { text: 'Notifications temps réel',         included: true },
-      { text: 'Connexion GitHub OAuth',           included: true },
-      { text: 'Snippets privés & brouillons',     included: true },
-      { text: 'Statistiques avancées',            included: true },
-      { text: 'Badge Pro & profil mis en avant',  included: true },
-      { text: 'Support prioritaire',              included: true },
-    ],
-  },
-]
+/**
+ * Section Abonnement (Freemium) — DevConnect
+ * React + TailwindCSS — portage 1:1 du prototype HTML.
+ *
+ * Config requise (tailwind.config.js → theme.extend) :
+ *   fontFamily: {
+ *     display: ['"Space Grotesk"', "sans-serif"],
+ *     sans:    ['"Hanken Grotesk"', "system-ui", "sans-serif"],
+ *     mono:    ['"JetBrains Mono"', "monospace"],
+ *   },
+ *   colors: { accent: "#BEF264", ink: "#0B0F17" },
+ *
+ * Fonts (index.html) :
+ *   https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700
+ *     &family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap
+ */
 
-export default function Pricing() {
-  const [annual, setAnnual] = useState(false)
+const Check = ({ className = "" }) => (
+  <svg className={className} width="12" height="12" viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 6 9 17l-5-5" />
+  </svg>
+);
+
+const Arrow = () => (
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 12h14M13 6l6 6-6 6" />
+  </svg>
+);
+
+const freeFeatures = [
+  "Profil développeur & feed de snippets",
+  "Follow & messagerie temps réel",
+  "Notifications instantanées",
+  "Connexion GitHub OAuth",
+];
+
+const proFeatures = [
+  "Badge Pro & profil mis en avant",
+  "Statistiques avancées sur tes posts",
+  "Snippets épinglés & thèmes de code",
+  "Messages illimités & envois de fichiers",
+  "Accès anticipé aux nouveautés",
+];
+
+export default function PricingSection() {
+  const [yearly, setYearly] = useState(false);
+
+  const proPrice = yearly ? "3,90" : "4,90";
+  const proPeriod = yearly ? "/ mois · facturé annuellement" : "/ mois";
 
   return (
-    <section id="pricing" className="relative overflow-hidden py-[110px]">
-      {/* Décor : motif grille + halo accent */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden="true"
-        style={{
-          backgroundImage: 'linear-gradient(#E7EAE3 1px,transparent 1px),linear-gradient(90deg,#E7EAE3 1px,transparent 1px)',
-          backgroundSize: '46px 46px',
-          WebkitMaskImage: 'radial-gradient(ellipse 70% 60% at 50% 0%,#000 30%,transparent 72%)',
-          maskImage: 'radial-gradient(ellipse 70% 60% at 50% 0%,#000 30%,transparent 72%)',
-        }}
-      />
-      <div
-        className="pointer-events-none absolute left-1/2 top-[-120px] h-[420px] w-[760px] -translate-x-1/2 rounded-full blur-[120px]"
-        aria-hidden="true"
-        style={{ background: 'color-mix(in srgb,#BEF264 28%,transparent)' }}
-      />
-
-      <div className="relative mx-auto max-w-[1200px] px-8">
-
-        {/* Header */}
+    <section id="pricing" className="bg-[#FBFCFA] font-sans pt-[90px] pb-[30px]">
+      <div className="mx-auto max-w-[1200px] px-8">
+        {/* En-tête */}
         <div className="mx-auto max-w-[680px] text-center">
-          <span className="font-mono text-[13px] font-semibold uppercase tracking-[.04em] text-[#7A8190]">
-            // Abonnements
+          <span className="font-mono text-[13px] font-semibold uppercase tracking-[0.04em] text-[#7A8190]">
+            // Abonnement
           </span>
-          <h2 className="mt-[14px] font-display text-[44px] font-semibold leading-[1.08] tracking-[-0.03em]">
-            Simple, transparent, sans surprise.
+          <h2 className="mt-3.5 font-display text-[44px] font-semibold leading-[1.08] tracking-[-0.03em] text-ink">
+            Commence gratuitement, passe Pro quand tu veux.
           </h2>
-          <p className="mt-4 text-[18px] leading-relaxed text-[#525968]">
-            Commence gratuitement, passe à Pro quand tu veux briller dans la communauté.
+          <p className="mt-4 text-[18px] leading-[1.6] text-[#525968]">
+            Le réseau reste 100&nbsp;% gratuit. DevConnect&nbsp;Pro débloque des
+            fonctionnalités premium pour les devs qui veulent aller plus loin.
           </p>
         </div>
 
-        {/* Toggle mensuel / annuel */}
-        <div className="mt-9 flex items-center justify-center gap-4">
-          <span className={`text-[15px] font-medium transition-colors ${!annual ? 'text-ink' : 'text-[#8A909C]'}`}>
+        {/* Toggle périodicité */}
+        <div className="mt-[30px] flex items-center justify-center gap-3.5">
+          <span className={`text-[14.5px] font-semibold ${yearly ? "text-[#8A909C]" : "text-ink"}`}>
             Mensuel
           </span>
           <button
-            onClick={() => setAnnual(v => !v)}
-            role="switch"
-            aria-checked={annual}
-            className="relative h-7 w-12 rounded-full transition-colors focus:outline-none focus-visible:ring-4 focus-visible:ring-[color-mix(in_srgb,#BEF264_30%,transparent)]"
-            style={{ background: annual ? '#BEF264' : '#D1D5DB' }}
+            onClick={() => setYearly((y) => !y)}
+            aria-label="Changer la périodicité"
+            className="relative h-[30px] w-[54px] flex-none rounded-full border border-[#DDE0D8] bg-white p-0"
           >
             <span
-              className="absolute top-0.5 h-6 w-6 rounded-full bg-white shadow-sm transition-all duration-200"
-              style={{ left: annual ? '22px' : '2px' }}
+              className="absolute left-[3px] top-[3px] h-[22px] w-[22px] rounded-full bg-accent transition-transform duration-[250ms] ease-[cubic-bezier(.2,.7,.2,1)]"
+              style={{ transform: yearly ? "translateX(24px)" : "translateX(0)" }}
             />
           </button>
-          <span className={`text-[15px] font-medium transition-colors ${annual ? 'text-ink' : 'text-[#8A909C]'}`}>
+          <span className={`text-[14.5px] font-semibold ${yearly ? "text-ink" : "text-[#8A909C]"}`}>
             Annuel
           </span>
-          <span className="inline-flex items-center rounded-full bg-[color-mix(in_srgb,#BEF264_22%,transparent)] px-[10px] py-[4px] font-mono text-[12px] font-semibold text-ink">
-            −22% 🎉
+          <span className="rounded-full bg-accent px-[9px] py-1 font-mono text-[11.5px] font-semibold text-ink">
+            -20%
           </span>
         </div>
 
-        {/* Cards */}
-        <div className="mx-auto mt-14 grid max-w-[840px] grid-cols-1 items-stretch gap-6 md:grid-cols-2">
-          {plans.map(plan => (
-            <PlanCard key={plan.name} plan={plan} annual={annual} />
-          ))}
+        {/* Grille des plans */}
+        <div className="mx-auto mt-10 grid max-w-[860px] grid-cols-1 gap-5 md:grid-cols-2">
+          {/* FREE */}
+          <div className="rounded-[20px] border border-[#ECEEE8] bg-white p-8">
+            <div className="flex items-center gap-2.5">
+              <span className="font-display text-[20px] font-semibold text-ink">Gratuit</span>
+              <span className="rounded-full bg-[#F1F3ED] px-2.5 py-1 font-mono text-[11.5px] text-[#6A7180]">
+                Pour toujours
+              </span>
+            </div>
+            <p className="mt-2.5 text-[14.5px] leading-[1.5] text-[#5A6170]">
+              L'essentiel pour rejoindre la communauté et publier ton code.
+            </p>
+            <div className="my-[22px] flex items-baseline gap-1.5">
+              <span className="font-display text-[46px] font-semibold tracking-[-0.03em] text-ink">0&nbsp;€</span>
+              <span className="text-[15px] text-[#8A909C]">/ mois</span>
+            </div>
+            <a
+              href="#"
+              className="flex items-center justify-center rounded-[11px] border border-[#DDE0D8] bg-white p-[13px] text-[15px] font-semibold text-ink transition-colors hover:bg-[#F1F3ED]"
+            >
+              Créer un compte
+            </a>
+            <div className="my-6 h-px bg-[#ECEEE8]" />
+            <ul className="flex flex-col gap-[13px]">
+              {freeFeatures.map((f) => (
+                <li key={f} className="flex items-start gap-[11px]">
+                  <span className="mt-px flex h-5 w-5 flex-none items-center justify-center rounded-md bg-[#F1F3ED] text-ink">
+                    <Check />
+                  </span>
+                  <span className="text-[14.5px] text-[#3D4453]">{f}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* PRO */}
+          <div className="relative overflow-hidden rounded-[20px] bg-ink p-8 text-white shadow-[0_30px_70px_-30px_rgba(11,15,23,0.5)]">
+            {/* motif décoratif */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-10"
+              style={{
+                backgroundImage:
+                  "radial-gradient(color-mix(in srgb,#BEF264 60%,transparent) 1px,transparent 1px)",
+                backgroundSize: "22px 22px",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse 80% 60% at 70% 0%,#000,transparent 70%)",
+                maskImage:
+                  "radial-gradient(ellipse 80% 60% at 70% 0%,#000,transparent 70%)",
+              }}
+            />
+            <div className="relative">
+              <div className="flex items-center gap-2.5">
+                <span className="font-display text-[20px] font-semibold">
+                  DevConnect <span className="text-accent">Pro</span>
+                </span>
+                <span className="rounded-full bg-accent px-2.5 py-1 font-mono text-[11.5px] font-semibold text-ink">
+                  Populaire
+                </span>
+              </div>
+              <p className="mt-2.5 text-[14.5px] leading-[1.5] text-[#A9B0BD]">
+                Pour les devs qui veulent plus de visibilité et d'outils.
+              </p>
+              <div className="my-[22px] flex items-baseline gap-1.5">
+                <span className="font-display text-[46px] font-semibold tracking-[-0.03em]">
+                  {proPrice}&nbsp;€
+                </span>
+                <span className="text-[15px] text-[#8A909C]">{proPeriod}</span>
+              </div>
+              <a
+                href="#"
+                className="flex items-center justify-center gap-2 rounded-[11px] bg-accent p-[13px] text-[15px] font-semibold text-ink shadow-[0_6px_20px_color-mix(in_srgb,#BEF264_40%,transparent)] transition-transform hover:-translate-y-0.5"
+              >
+                Passer à Pro
+                <Arrow />
+              </a>
+              <div className="my-6 h-px bg-[#1C232F]" />
+              <div className="mb-3.5 font-mono text-[12.5px] font-semibold text-[#7A828F]">
+                TOUT LE GRATUIT, PLUS&nbsp;:
+              </div>
+              <ul className="flex flex-col gap-[13px]">
+                {proFeatures.map((f) => (
+                  <li key={f} className="flex items-start gap-[11px]">
+                    <span className="mt-px flex h-5 w-5 flex-none items-center justify-center rounded-md text-accent"
+                          style={{ background: "color-mix(in srgb,#BEF264 26%,transparent)" }}>
+                      <Check />
+                    </span>
+                    <span className="text-[14.5px] text-[#E6EAF0]">{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
 
-        {/* Reassurance */}
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 font-mono text-[12.5px] text-[#6A7180]">
-          {[
-            'Annulation à tout moment',
-            'Paiement sécurisé via Stripe',
-            'Pas de carte requise pour le plan gratuit',
-          ].map(item => (
-            <span key={item} className="inline-flex items-center gap-2">
-              <span className="inline-flex h-4 w-4 items-center justify-center rounded-[4px] bg-accent text-[10px] text-ink" aria-hidden="true">✓</span>
-              {item}
-            </span>
-          ))}
-        </div>
-
+        <p className="mt-[22px] text-center text-[13.5px] text-[#8A909C]">
+          Sans engagement · Annulable à tout moment · Tarif étudiant disponible
+        </p>
       </div>
     </section>
-  )
-}
-
-function PlanCard({ plan, annual }) {
-  const isPro = plan.ctaStyle === 'accent'
-  const price = annual ? plan.yearlyPrice : plan.monthlyPrice
-
-  return (
-    <div
-      className={`relative flex flex-col rounded-2xl p-8 transition duration-300 ${
-        isPro
-          ? 'bg-ink text-white shadow-[0_40px_80px_-24px_rgba(11,15,23,.55)] ring-1 ring-[#1C232F] lg:-translate-y-3 lg:scale-[1.02]'
-          : 'border border-[#ECEEE8] bg-white/90 backdrop-blur-sm hover:-translate-y-1 hover:border-[#DDE0D8] hover:shadow-[0_24px_50px_-28px_rgba(15,20,30,.25)]'
-      }`}
-    >
-      {/* Badge */}
-      {plan.badge && (
-        <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full bg-accent px-4 py-1 font-mono text-[12px] font-semibold text-ink whitespace-nowrap shadow-[0_8px_24px_-8px_color-mix(in_srgb,#BEF264_70%,transparent)]">
-          ★ {plan.badge}
-        </span>
-      )}
-
-      {/* Plan name */}
-      <div className="flex items-center gap-3">
-        <span className={`font-display text-[18px] font-semibold ${isPro ? 'text-white' : 'text-ink'}`}>
-          {plan.name}
-        </span>
-        {isPro && (
-          <span className="rounded-full bg-[color-mix(in_srgb,#BEF264_18%,transparent)] px-3 py-0.5 font-mono text-[11px] font-semibold text-accent">
-            PRO
-          </span>
-        )}
-      </div>
-
-      {/* Price */}
-      <div className="mt-5 flex items-end gap-1.5">
-        <span className={`font-display text-[52px] font-semibold leading-none tracking-[-0.04em] ${isPro ? 'text-white' : 'text-ink'}`}>
-          {price === 0 ? '0' : `${price}`}
-          <span className="text-[28px]">€</span>
-        </span>
-        <span className={`mb-2 text-[15px] ${isPro ? 'text-[#7A828F]' : 'text-[#9AA1AD]'}`}>
-          / mois
-        </span>
-      </div>
-
-      {/* Note facturation annuelle (hauteur réservée pour aligner les cartes) */}
-      <div className="mt-2 h-[18px]">
-        {annual && price > 0 && (
-          <span className={`font-mono text-[12px] ${isPro ? 'text-accent' : 'text-[#6A7180]'}`}>
-            facturé {price * 12}€ / an · 2 mois offerts
-          </span>
-        )}
-      </div>
-
-      {/* Description */}
-      <p className={`mt-3 text-[15px] leading-relaxed ${isPro ? 'text-[#9AA1AD]' : 'text-[#5A6170]'}`}>
-        {plan.description}
-      </p>
-
-      {/* Divider */}
-      <div className={`my-6 h-px ${isPro ? 'bg-[#1C232F]' : 'bg-[#ECEEE8]'}`} />
-
-      {/* Features */}
-      <ul className="flex flex-col gap-[13px]">
-        {plan.features.map(({ text, included }) => (
-          <li key={text} className="flex items-start gap-3">
-            <span
-              className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-[5px] ${
-                included
-                  ? 'bg-accent text-ink'
-                  : isPro
-                  ? 'bg-[#1B2230] text-[#4B5563]'
-                  : 'bg-[#F1F3ED] text-[#C4C9D0]'
-              }`}
-              aria-hidden="true"
-            >
-              {included
-                ? <CheckIcon />
-                : <CrossIcon />
-              }
-            </span>
-            <span className={`text-[14.5px] ${
-              included
-                ? isPro ? 'text-[#E6EAF0]' : 'text-[#2C313C]'
-                : isPro ? 'text-[#4B5563]'  : 'text-[#A0A7B3]'
-            }`}>
-              {text}
-            </span>
-          </li>
-        ))}
-      </ul>
-
-      {/* CTA */}
-      <div className="mt-auto pt-8">
-        {isPro ? (
-          <button
-            className="flex w-full items-center justify-center gap-2 rounded-[11px] bg-accent py-[14px] text-[15px] font-semibold text-ink transition hover:-translate-y-0.5"
-            style={{ boxShadow: '0 6px 20px color-mix(in srgb,#BEF264 40%,transparent)' }}
-          >
-            {plan.cta}
-            <ArrowIcon />
-          </button>
-        ) : (
-          <button className="flex w-full items-center justify-center gap-2 rounded-[11px] border border-[#DDE0D8] py-[14px] text-[15px] font-semibold text-ink transition hover:bg-[#F1F3ED]">
-            {plan.cta}
-          </button>
-        )}
-      </div>
-    </div>
-  )
-}
-
-function CheckIcon() {
-  return (
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 6 9 17l-5-5" />
-    </svg>
-  )
-}
-function CrossIcon() {
-  return (
-    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 6 6 18M6 6l12 12" />
-    </svg>
-  )
-}
-function ArrowIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M5 12h14M13 6l6 6-6 6" />
-    </svg>
-  )
+  );
 }
