@@ -45,6 +45,7 @@ export default function Navbar() {
           >
             Rejoindre
           </Link>
+        
         </div>
 
         {/* Burger – mobile */}
